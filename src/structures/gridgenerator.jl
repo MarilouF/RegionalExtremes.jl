@@ -1,11 +1,25 @@
 @enum VarType time rdm
 
+"""
+    genVar(t::VarType, n::Integer)::Vector{Float64}
+
+Generate a random or temporal explanatory variable with `n` values.
+
+"""
 function genVar(t::VarType, n::Integer)::Vector{Float64}
     return t == time ? collect(1:n) : rand(Uniform(), n)
 end
 
-function genParam(m::Tuple{<:Integer, <:Integer}, p::Integer, κ::Real, n::Integer,
-        ev::Vector{Tuple{VarType, T}} where T<:Real, δ::Real = 0)::Tuple{Array{Real, 2}, Vector{Real}, Array{Real, 2}, Array{Real, 2}}
+"""
+    genParam(m::Tuple{<:Integer, <:Integer}, p::Integer, κ::Real, n::Integer, ev::Vector{Tuple{VarType, T}} where T<:Real,
+        δ::Real = 0)::Tuple{Array{Real, 2}, Vector{Real}, Array{Real, 2}, Array{Real, 2}}
+
+Generate a stationary or non-stationary regional parameter with corresponding explanatory variables.
+
+"""
+function genParam(m::Tuple{<:Integer, <:Integer}, p::Integer, κ::Real, n::Integer, ev::Vector{Tuple{VarType, T}} where T<:Real,
+    δ::Real = 0)::Tuple{Array{Real, 2}, Vector{Real}, Array{Real, 2}, Array{Real, 2}}
+
     F = GMRF.iGMRF(m..., p, κ)
     β₀ = δ .+ GMRF.rand(F)
 
@@ -21,6 +35,15 @@ function genParam(m::Tuple{<:Integer, <:Integer}, p::Integer, κ::Real, n::Integ
     return x, β₀, βᵢs, θ
 end
 
+"""
+    genGrid(m::Tuple{Integer, Integer}, p::Integer, κμ::Real, κϕ::Real, κξ::Real, n::Integer;
+        evμ::Vector{Tuple{VarType, T}} where T<:Real = Vector{Tuple{VarType, Real}}(),
+        evϕ::Vector{Tuple{VarType, T}} where T<:Real = Vector{Tuple{VarType, Real}}(),
+        evξ::Vector{Tuple{VarType, T}} where T<:Real = Vector{Tuple{VarType, Real}}())::Tuple{BlockMaximaGrid, Array{Real, 2}, Vector{Array{Real, 2}}}
+
+Generate a random BlockMaximaGrid with its parameters and explanatory variables.
+
+"""
 function genGrid(m::Tuple{Integer, Integer}, p::Integer, κμ::Real, κϕ::Real, κξ::Real, n::Integer;
         evμ::Vector{Tuple{VarType, T}} where T<:Real = Vector{Tuple{VarType, Real}}(),
         evϕ::Vector{Tuple{VarType, T}} where T<:Real = Vector{Tuple{VarType, Real}}(),

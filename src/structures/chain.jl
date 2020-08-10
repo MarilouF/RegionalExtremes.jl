@@ -14,12 +14,23 @@ end
 
 Base.Broadcast.broadcastable(obj::Chain) = Ref(obj)
 
-function Chain(g::BlockMaximaGrid, k::Integer, burnin::Integer,
+"""
+    Chain(g::BlockMaximaGrid, k::Integer, burnin::Integer,
         step::Vector{<:Real};
         μcov::Array{<:Real, 2} = zeros(size(g.y, 2), 0),
         ϕcov::Array{<:Real, 2} = zeros(size(g.y, 2), 0),
         ξcov::Array{<:Real, 2} = zeros(size(g.y, 2), 0),
         regional::Vector{Bool} = ones(Bool, 3 + size(μcov, 2) + size(ϕcov, 2) + size(ξcov, 2)))::Chain
+
+Build a MCMC Chain.
+
+"""
+function Chain(g::BlockMaximaGrid, k::Integer, burnin::Integer,
+    step::Vector{<:Real};
+    μcov::Array{<:Real, 2} = zeros(size(g.y, 2), 0),
+    ϕcov::Array{<:Real, 2} = zeros(size(g.y, 2), 0),
+    ξcov::Array{<:Real, 2} = zeros(size(g.y, 2), 0),
+    regional::Vector{Bool} = ones(Bool, 3 + size(μcov, 2) + size(ϕcov, 2) + size(ξcov, 2)))::Chain
 
     n = size(g.y, 2)
     @assert size(μcov, 1) == n "The number of covariate data for μ should correspond to the number of data per grid cell"
@@ -54,6 +65,12 @@ function Chain(g::BlockMaximaGrid, k::Integer, burnin::Integer,
     return Chain(g, k, burnin, θ, θacc, step, θlogpdf, regional, κ, cov, index)
 end
 
+"""
+    gev_loglikelihood(chain::Chain, candidate::Vector{<:Real}, a::Integer)::Real
+
+Calculate the log likelihood for the candidates at grid cell `a` taking into account the covariates.
+
+"""
 function gev_loglikelihood(chain::Chain, candidate::Vector{<:Real}, a::Integer)::Real
     μ = multiply(chain.cov[1], candidate[chain.index[1]])
     ϕ = multiply(chain.cov[2], candidate[chain.index[2]])
@@ -62,10 +79,22 @@ function gev_loglikelihood(chain::Chain, candidate::Vector{<:Real}, a::Integer):
     return sum(logpdf.(GeneralizedExtremeValue.(μ, exp.(ϕ), ξ), chain.g.y[a, :]))
 end
 
+"""
+    local_loglikelihood(chain::Chain, candidates::Array{<:Real, 2}, subset::Vector{<:Integer}, i::Integer)::Vector{<:Real}
+
+Calculate the log likelihood for the candidates at each individual grid cells in the subset.
+
+"""
 function local_loglikelihood(chain::Chain, candidates::Array{<:Real, 2}, subset::Vector{<:Integer}, i::Integer)::Vector{<:Real}
     return gev_loglikelihood.(chain, [candidates[:, subset[i]] for i in 1:length(subset)], subset)
 end
 
+"""
+    regional_loglikelihood(chain::Chain, candidates::Array{<:Real, 2}, subset::Vector{<:Integer}, i::Integer, param::Integer)::Vector{<:Real}
+
+Calculate the Gaussian Marcov random fields full conditional log likelihood for the candidates for the grid cell in `subset` for the parameter `param`.  
+
+"""
 function regional_loglikelihood(chain::Chain, candidates::Array{<:Real, 2}, subset::Vector{<:Integer}, i::Integer, param::Integer)::Vector{<:Real}
     return GMRF.fullcondlogpdf(GMRF.iGMRF(chain.g.G.gridSize..., chain.g.p, chain.κ[i, sum(chain.θisRegional[1:param])]), candidates[param, :])[subset]
 end
