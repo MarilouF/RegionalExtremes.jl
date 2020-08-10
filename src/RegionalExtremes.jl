@@ -1,7 +1,9 @@
 module RegionalExtremes
-    function helloworld()
-        println("Hello World")
-    end
+    using Extremes, GMRF
 
-    export helloworld
+    include("util.jl")
+    include("structures.jl")
+    include("parameterestimation.jl")
+
+    export BlockMaximaGrid, Chain, genGrid, fit
 end # module
