@@ -1,0 +1,4 @@
+name = "RegionalExtremes"
+uuid = "1d79bbed-26b4-4b3d-ac66-31bebd77366c"
+authors = ["Jonathan Jalbert <jonathan.jalbert@polymtl.ca>", "Marilou Farmer <marilou.farmer@polymtl.ca>"]
+version = "0.1.0"
