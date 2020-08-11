@@ -1,5 +1,8 @@
 using RegionalExtremes
-using Test
+using Test, Statistics
+import Random
+
+Random.seed!(2)
 
 @testset "RegionalExtremes.jl" begin
     include("util_test.jl")
