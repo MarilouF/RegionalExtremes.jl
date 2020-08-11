@@ -133,7 +133,7 @@ Fit the generalized extreme value parameters for every grid cell under the Bayes
 function run!(chain::Chain)
     setinitialvalues!(chain)
 
-    for i in 2:chain.k
+    @showprogress for i in 2:chain.k
         copylast!(chain, i)
 
         MHrealisation!(chain, i)

@@ -1,5 +1,6 @@
 module RegionalExtremes
-    using Extremes, GMRF
+    using Distributions, ProgressMeter
+    using Extremes, GMRF # TODO : Add GMRF as dependency
 
     include("util.jl")
     include("structures.jl")
