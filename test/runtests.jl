@@ -1,5 +1,5 @@
 using RegionalExtremes
-using Test, Statistics
+using Test, Statistics, Distributions
 import Random
 
 Random.seed!(2)

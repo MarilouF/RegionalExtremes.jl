@@ -85,14 +85,14 @@ end
 Calculate the log likelihood for the candidates at each individual grid cells in the subset.
 
 """
-function local_loglikelihood(chain::Chain, candidates::Array{<:Real, 2}, subset::Vector{<:Integer}, i::Integer)::Vector{<:Real}
+function local_loglikelihood(chain::Chain, candidates::Array{<:Real, 2}, subset::Vector{<:Integer}, i::Integer)::Vector{<:Real} # TODO : Remove i
     return gev_loglikelihood.(chain, [candidates[:, subset[i]] for i in 1:length(subset)], subset)
 end
 
 """
     regional_loglikelihood(chain::Chain, candidates::Array{<:Real, 2}, subset::Vector{<:Integer}, i::Integer, param::Integer)::Vector{<:Real}
 
-Calculate the Gaussian Marcov random fields full conditional log likelihood for the candidates for the grid cell in `subset` for the parameter `param`.  
+Calculate the Gaussian Marcov random fields full conditional log likelihood for the candidates for the grid cell in `subset` for the parameter `param`.
 
 """
 function regional_loglikelihood(chain::Chain, candidates::Array{<:Real, 2}, subset::Vector{<:Integer}, i::Integer, param::Integer)::Vector{<:Real}
