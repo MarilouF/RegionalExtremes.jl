@@ -51,15 +51,13 @@ function Chain(g::BlockMaximaGrid, k::Integer, burnin::Integer,
     identitycol = ones(n, 1)
     cov = [hcat(identitycol, μcov), hcat(identitycol, ϕcov), hcat(identitycol, ξcov)]
 
-    i = 0
-    function increasei() # TODO : Find other solution
-        i = i + 1
-        return i
-    end
+    sμ = size(μcov, 2) + 1
+    sϕ = size(ϕcov, 2) + 1
+    sξ = size(ξcov, 2) + 1
     index = [
-        Integer[increasei() for k in 1:size(μcov, 2) + 1],
-        Integer[increasei() for k in 1:size(ϕcov, 2) + 1],
-        Integer[increasei() for k in 1:size(ξcov, 2) + 1]
+        Integer[k for k in 1:sμ],
+        Integer[k for k in sμ .+ (1:sϕ)],
+        Integer[k for k in sμ .+ sϕ .+ (1:sξ)]
     ]
 
     return Chain(g, k, burnin, θ, θacc, step, θlogpdf, regional, κ, cov, index)
