@@ -52,10 +52,10 @@
         chain = Chain(BlockMaximaGrid((1, 2), 1, [1 2; 1 2]), 3000, 500, [0.5, 0.5, 0.5, 0.5], μcov = μcov)
         @test RegionalExtremes.gev_loglikelihood(chain, [1, 1, 0, 0], 1) ≈ -2.0 atol = 0.001
     end
-    @testset "local_loglikelihood(chain, candidates, subset, i)" begin
+    @testset "local_loglikelihood(chain, candidates, subset)" begin
         # Stationary with subset of size 1
         chain = Chain(BlockMaximaGrid((1, 2), 1, [1 1; 1 1]), 3000, 500, [0.5, 0.5, 0.5])
-        @test RegionalExtremes.local_loglikelihood(chain, [1 1; 0 0; 0 0], [1], 1)[] ≈ -2.0 atol = 0.001
+        @test RegionalExtremes.local_loglikelihood(chain, [1 1; 0 0; 0 0], [1])[] ≈ -2.0 atol = 0.001
     end
     @testset "regional_loglikelihood(chain, candidates, subset, i, param)" begin
         # Stationary with subset of size 1

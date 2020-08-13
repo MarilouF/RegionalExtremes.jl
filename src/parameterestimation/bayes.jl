@@ -12,7 +12,7 @@ function setinitialvalues!(chain::Chain)
         end
     end
     for p in 1:size(chain.θ, 2)
-        chain.θlogpdf[1, p, :] = local_loglikelihood(chain, chain.θ[1, :, :], collect(1:prod(chain.g.G.gridSize)), 1)
+        chain.θlogpdf[1, p, :] = local_loglikelihood(chain, chain.θ[1, :, :], collect(1:prod(chain.g.G.gridSize)))
         if chain.θisRegional[p]
             κ = chain.θ[1, p, :]' * chain.g.G.W * chain.θ[1, p, :] ./ (prod(chain.g.G.gridSize) - 1)
             chain.κ[1, sum(chain.θisRegional[1:p])] = κ == 0 ? 1.0 : κ # TODO : 1.0 ?
@@ -75,7 +75,7 @@ Realize a Metropolis Hastings step for the parameter `p` for every grid cell wit
 function MHlocal!(chain::Chain, i::Integer, p::Integer)
     set = collect(1:size(chain.g.y, 1))
     c = candidates(chain, i, set, p)
-    logpdf = local_loglikelihood(chain, c, set, i)
+    logpdf = local_loglikelihood(chain, c, set)
     MHupdatechain!(chain, i, set, p, c, logpdf)
 end
 
@@ -88,7 +88,7 @@ Realize a Metropolis Hastings step for the parameter `p` for every grid cell usi
 function MHregional!(chain::Chain, i::Integer, p::Integer)
     for subset in chain.g.G.condIndSubset
         c = candidates(chain, i, subset, p)
-        logpdf = local_loglikelihood(chain, c, subset, i) .+ regional_loglikelihood(chain, c, subset, i, p)
+        logpdf = local_loglikelihood(chain, c, subset) .+ regional_loglikelihood(chain, c, subset, i, p)
         MHupdatechain!(chain, i, subset, p, c, logpdf)
     end
 end

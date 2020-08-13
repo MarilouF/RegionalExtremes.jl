@@ -80,12 +80,12 @@ function gev_loglikelihood(chain::Chain, candidate::Vector{<:Real}, a::Integer):
 end
 
 """
-    local_loglikelihood(chain::Chain, candidates::Array{<:Real, 2}, subset::Vector{<:Integer}, i::Integer)::Vector{<:Real}
+    local_loglikelihood(chain::Chain, candidates::Array{<:Real, 2}, subset::Vector{<:Integer})::Vector{<:Real}
 
 Calculate the log likelihood for the candidates at each individual grid cells in the subset.
 
 """
-function local_loglikelihood(chain::Chain, candidates::Array{<:Real, 2}, subset::Vector{<:Integer}, i::Integer)::Vector{<:Real} # TODO : Remove i
+function local_loglikelihood(chain::Chain, candidates::Array{<:Real, 2}, subset::Vector{<:Integer})::Vector{<:Real}
     return gev_loglikelihood.(chain, [candidates[:, subset[i]] for i in 1:length(subset)], subset)
 end
 
