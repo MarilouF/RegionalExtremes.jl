@@ -15,7 +15,7 @@ function setinitialvalues!(chain::Chain)
         chain.θlogpdf[1, p, :] = local_loglikelihood(chain, chain.θ[1, :, :], collect(1:prod(chain.g.G.gridSize)))
         if chain.θisRegional[p]
             κ = chain.θ[1, p, :]' * chain.g.G.W * chain.θ[1, p, :] ./ (prod(chain.g.G.gridSize) - 1)
-            chain.κ[1, sum(chain.θisRegional[1:p])] = κ == 0 ? 1.0 : κ # TODO : 1.0 ?
+            chain.κ[1, sum(chain.θisRegional[1:p])] = κ == 0 ? 1.0 : κ
 
             chain.θlogpdf[1, p, :] .+= regional_loglikelihood(chain, chain.θ[1, :, :], collect(1:prod(chain.g.G.gridSize)), 1, p)
         end

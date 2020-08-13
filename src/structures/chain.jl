@@ -1,4 +1,4 @@
-struct Chain # TODO : println
+struct Chain
     g::BlockMaximaGrid
     k::Integer
     burnin::Integer
