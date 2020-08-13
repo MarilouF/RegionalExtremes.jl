@@ -66,6 +66,29 @@ function Chain(g::BlockMaximaGrid, k::Integer, burnin::Integer,
 end
 
 """
+    Base.show(io::IO, obj::Chain)
+
+Displays an object of type Chain.
+
+"""
+function Base.show(io::IO, obj::Chain)
+    println(io, "Chain")
+    println(io, "g :")
+    showGrid(io, obj.g, prefix = "\t\t")
+    println(io)
+    println(io, "k :\t\t", obj.k)
+    println(io, "burnin :\t", obj.burnin)
+    println(io, "θ :\t\t", typeof(obj.θ), "[", size(obj.θ, 1), ", ", size(obj.θ, 2), ", ", size(obj.θ, 3), "]")
+    println(io, "θacc :\t\t", typeof(obj.θacc), "[", size(obj.θacc, 1), ", ", size(obj.θacc, 2), ", ", size(obj.θacc, 3), "]")
+    println(io, "θstep :\t\t", typeof(obj.θstep), "[", length(obj.θstep), "]")
+    println(io, "θlogpdf :\t", typeof(obj.θlogpdf), "[", size(obj.θlogpdf, 1), ", ", size(obj.θlogpdf, 2), ", ", size(obj.θlogpdf, 3), "]")
+    println(io, "θisRegional :\t", typeof(obj.θisRegional), "[", length(obj.θisRegional), "]")
+    println(io, "κ :\t\t", typeof(obj.κ), "[", size(obj.κ, 1), ", ", size(obj.κ, 2), "]")
+    println(io, "cov :\t\t", typeof(obj.cov), "[", length(obj.cov), "]")
+    println(io, "index :\t\t", typeof(obj.index), "[", length(obj.index), "]")
+end
+
+"""
     gev_loglikelihood(chain::Chain, candidate::Vector{<:Real}, a::Integer)::Real
 
 Calculate the log likelihood for the candidates at grid cell `a` taking into account the covariates.

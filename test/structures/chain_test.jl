@@ -41,6 +41,12 @@
         @test chain.cov == [hcat(ones(2 ,1), μcov), ones(2, 1), ones(2, 1)]
         @test chain.index == [[1, 2], [3], [4]]
     end
+    @testset "Base.show(io, obj)" begin
+        io = IOBuffer()
+        g = BlockMaximaGrid((1, 2), 1, [1 2 3; 4 5 6])
+        c = Chain(g, 3000, 500, [0.5, 0.2, 0.1])
+        @test_logs Base.show(io, c)
+    end
     @testset "gev_loglikelihood(chain, candidate, a)" begin
         # Stationary
         chain = Chain(BlockMaximaGrid((1, 2), 1, [1 1; 1 1]), 3000, 500, [0.5, 0.5, 0.5])

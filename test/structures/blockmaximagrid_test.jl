@@ -23,4 +23,15 @@
         @test grid.p == p
         @test grid.y == y
     end
+    g = BlockMaximaGrid((1, 2), 1, [1 2 3; 4 5 6])
+    @testset "Base.show(io, obj)" begin
+        # Print does not throw
+        io = IOBuffer()
+        @test_logs Base.show(io, g)
+    end
+    @testset "showGrid(io, obj; prefix)" begin
+        # Print does not throw
+        io = IOBuffer()
+        @test_logs RegionalExtremes.showGrid(io, g, prefix = "\t")
+    end
 end
